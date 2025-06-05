@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'Ttangsbudaejjigae';
+  src: url('/src/assets/fonts/Ttangsbudaejjigae.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GiazaStencil';
+  src: url('/src/assets/fonts/GiazaStencil.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: 'Ttangsbudaejjigae', sans-serif;
+}

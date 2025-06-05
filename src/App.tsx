@@ -1,33 +1,26 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { store } from './store';
-import { Counter } from './components/Counter';
+// import { Counter } from './components/Counter'; // Counter 컴포넌트는 더 이상 기본 경로에서 사용하지 않습니다.
+import Header from './components/Header';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
     <Provider store={store}>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
-            {/* 헤더 */}
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-8">
-              <h1 className="text-2xl font-bold text-white text-center">Redux 카운터 데모</h1>
-            </div>
-
-            {/* 메인 컨텐츠 */}
-            <div className="p-8">
-              <Counter />
-            </div>
-
-            {/* 푸터 */}
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
-              <p className="text-sm text-gray-500 text-center">
-                React Kit CLI로 생성된 Redux 데모 프로젝트
-              </p>
-            </div>
-          </div>
+      <BrowserRouter>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+          <Header /> {/* 헤더는 모든 페이지에 표시됩니다. */}
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            {/* 다른 라우트들을 여기에 추가할 수 있습니다. */}
+            {/* 예: <Route path="/jobs" element={<JobsPage />} /> */}
+          </Routes>
+          {/* 푸터나 다른 공통 요소들을 여기에 추가할 수 있습니다. */}
+           {/* 현재 푸터는 HomePage 내부에 포함되어 있습니다. 필요에 따라 이동 가능합니다. */}
         </div>
-      </div>
+      </BrowserRouter>
     </Provider>
   );
 }
