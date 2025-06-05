@@ -35,7 +35,7 @@ const Header: React.FC = () => {
             회원가입
           </Link>
           <button className="w-7 h-7 flex items-center justify-center">
-            <CiSearch size={28} color="main-brown" />
+            <CiSearch size={28} color="#7C4D25" />
           </button>
         </div>
       </div>
