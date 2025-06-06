@@ -5,6 +5,7 @@ import { store } from './store';
 // import { Counter } from './components/Counter'; // Counter 컴포넌트는 더 이상 기본 경로에서 사용하지 않습니다.
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Header /> {/* 헤더는 모든 페이지에 표시됩니다. */}
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
             {/* 다른 라우트들을 여기에 추가할 수 있습니다. */}
             {/* 예: <Route path="/jobs" element={<JobsPage />} /> */}
           </Routes>
