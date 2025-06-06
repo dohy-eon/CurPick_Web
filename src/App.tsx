@@ -6,6 +6,7 @@ import { store } from './store';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
             {/* 다른 라우트들을 여기에 추가할 수 있습니다. */}
             {/* 예: <Route path="/jobs" element={<JobsPage />} /> */}
           </Routes>
