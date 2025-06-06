@@ -1,25 +1,26 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { store } from './store';
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
-import { UserProvider } from './contexts/UserContext';
 
 function App() {
   return (
-    <UserProvider>
-      <Router>
-        <div className="min-h-screen bg-[#F9F9FA]">
-          <Header />
+    <Provider store={store}>
+      <BrowserRouter>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+          <Header /> {/* 헤더는 모든 페이지에 표시됩니다. */}
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
+            {/* 다른 라우트들을 여기에 추가할 수 있습니다. */}
+            {/* 예: <Route path="/jobs" element={<JobsPage />} /> */}
           </Routes>
+          {/* 푸터나 다른 공통 요소들을 여기에 추가할 수 있습니다. */}
+           {/* 현재 푸터는 HomePage 내부에 포함되어 있습니다. 필요에 따라 이동 가능합니다. */}
         </div>
-      </Router>
-    </UserProvider>
+      </BrowserRouter>
+    </Provider>
   );
 }
 

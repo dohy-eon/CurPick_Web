@@ -6,7 +6,6 @@ import { useUser } from '../contexts/UserContext';
 
 const Header: React.FC = () => {
   const { nickname, isLoggedIn } = useUser();
-
   return (
     <header className="w-full h-[80px] bg-white">
       <div className="max-w-[1920px] h-full mx-auto px-10 flex items-center justify-between">
