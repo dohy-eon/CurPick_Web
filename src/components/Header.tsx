@@ -2,8 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaSearch } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
+import { useUser } from '../contexts/UserContext';
 
 const Header: React.FC = () => {
+  const { nickname, isLoggedIn } = useUser();
+
   return (
     <header className="w-full h-[80px] bg-white">
       <div className="max-w-[1920px] h-full mx-auto px-10 flex items-center justify-between">
@@ -28,12 +31,24 @@ const Header: React.FC = () => {
 
         {/* 인증  */}
         <div className="flex items-center gap-4">
-          <Link to="/login" className="text-text-gray text-[20px] font-luxgom">
-            로그인
-          </Link>
-          <Link to="/signup" className="text-text-gray text-[20px] font-luxgom">
-            회원가입
-          </Link>
+          {isLoggedIn ? (
+            <span className="text-curpick-brown font-luxgom">{nickname}님</span>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-text-gray text-[20px] font-luxgom"
+              >
+                로그인
+              </Link>
+              <Link
+                to="/signup"
+                className="text-text-gray text-[20px] font-luxgom"
+              >
+                회원가입
+              </Link>
+            </>
+          )}
           <button className="w-7 h-7 flex items-center justify-center">
             <CiSearch size={28} color="#7C4D25" />
           </button>

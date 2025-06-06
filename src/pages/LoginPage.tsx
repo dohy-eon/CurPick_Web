@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
 import axios from 'axios';
+import { useUser } from '../contexts/UserContext';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { setNickname, setIsLoggedIn } = useUser();
 
   const handleLogin = async () => {
     try {
@@ -15,14 +17,12 @@ const LoginPage: React.FC = () => {
         password
       });
       
-      // 로그인 성공 시 처리
-      console.log('Login successful:', response.data);
-      // TODO: 토큰 저장 및 홈페이지로 이동
+      console.log('로그인 성공 :', response.data);
+      setNickname(response.data.nickname);
+      setIsLoggedIn(true);
       navigate('/');
     } catch (error) {
-      // 로그인 실패 시 처리
-      console.error('Login failed:', error);
-      // TODO: 에러 메시지 표시
+      console.error('로그인 실패 :', error);
     }
   };
 
