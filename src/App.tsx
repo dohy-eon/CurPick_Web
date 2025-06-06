@@ -2,7 +2,6 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { store } from './store';
-// import { Counter } from './components/Counter'; // Counter 컴포넌트는 더 이상 기본 경로에서 사용하지 않습니다.
 import Header from './components/Header';
 import HomePage from './pages/HomePage';
 
