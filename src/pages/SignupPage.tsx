@@ -11,6 +11,14 @@ const SignupPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<{
+    type: 'success' | 'error' | 'loading' | null;
+    message: string;
+  }>({ type: null, message: '' });
+  const [verificationStatus, setVerificationStatus] = useState<{
+    type: 'success' | 'error' | 'loading' | null;
+    message: string;
+  }>({ type: null, message: '' });
   const navigate = useNavigate();
 
   const handleSignup = async () => {
@@ -32,28 +40,75 @@ const SignupPage: React.FC = () => {
   };
 
   const handleEmailVerification = async () => {
+    if (!email) {
+      setEmailStatus({
+        type: 'error',
+        message: '이메일을 입력해주세요.'
+      });
+      return;
+    }
+
+    setEmailStatus({ type: 'loading', message: '이메일 전송 중...' });
     try {
       const response = await axios.post('http://localhost:8080/api/email/send', {
         email,
         authCode: verificationCode
       });
+      setEmailStatus({
+        type: 'success',
+        message: '인증번호가 이메일로 전송되었습니다.'
+      });
       console.log('이메일 전송 완료 :', response.data);
     } catch (error) {
+      setEmailStatus({
+        type: 'error',
+        message: '이메일 전송에 실패했습니다. 다시 시도해주세요.'
+      });
       console.error('이메일 전송 실패 :', error);
     }
   };
 
   const handleVerificationCheck = async () => {
+    if (!verificationCode) {
+      setVerificationStatus({
+        type: 'error',
+        message: '인증번호를 입력해주세요.'
+      });
+      return;
+    }
+
+    setVerificationStatus({ type: 'loading', message: '인증번호 확인 중...' });
     try {
       const response = await axios.post('http://localhost:8080/api/email/verify', {
         email,
         authCode: verificationCode
       });
-      console.log('이메일 인증 성공 :', response.data);
+      setVerificationStatus({
+        type: 'success',
+        message: '이메일 인증이 완료되었습니다.'
+      });
       setIsEmailVerified(true);
+      console.log('이메일 인증 성공 :', response.data);
     } catch (error) {
-      console.error('이메일 인증 실패 :', error);
+      setVerificationStatus({
+        type: 'error',
+        message: '인증번호가 일치하지 않습니다.'
+      });
       setIsEmailVerified(false);
+      console.error('이메일 인증 실패 :', error);
+    }
+  };
+
+  const getStatusColor = (type: 'success' | 'error' | 'loading' | null) => {
+    switch (type) {
+      case 'success':
+        return 'text-green-600';
+      case 'error':
+        return 'text-red-600';
+      case 'loading':
+        return 'text-blue-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
@@ -83,7 +138,7 @@ const SignupPage: React.FC = () => {
         </div>
 
         {/* 폼 */}
-        <div className="mt-12 px-24">
+        <div className="mt-12 px-12">
           {/* 닉네임 */}
           <div className="mb-6 flex items-center">
             <label className="w-[132px] text-black text-[20px] font-luxgom">닉네임</label>
@@ -133,7 +188,7 @@ const SignupPage: React.FC = () => {
           </div>
 
           {/* 이메일 */}
-          <div className="mb-6 flex items-center">
+          <div className="mb-2 flex items-center">
             <label className="w-[132px] text-black text-[20px] font-luxgom">이메일</label>
             <div className="flex-1 flex gap-4">
               <input
@@ -151,9 +206,14 @@ const SignupPage: React.FC = () => {
               </button>
             </div>
           </div>
+          {emailStatus.type && (
+            <div className={`ml-[132px] mb-4 text-[14px] ${getStatusColor(emailStatus.type)}`}>
+              {emailStatus.message}
+            </div>
+          )}
 
           {/* 이메일 인증 */}
-          <div className="mb-8 flex items-center">
+          <div className="mb-2 flex items-center">
             <label className="w-[132px] text-black text-[20px] font-luxgom">이메일 인증</label>
             <div className="flex-1 flex gap-4">
               <input
@@ -171,9 +231,14 @@ const SignupPage: React.FC = () => {
               </button>
             </div>
           </div>
+          {verificationStatus.type && (
+            <div className={`ml-[132px] mb-4 text-[14px] ${getStatusColor(verificationStatus.type)}`}>
+              {verificationStatus.message}
+            </div>
+          )}
 
           {/* 가입하기 버튼 */}
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-8">
             <button
               onClick={handleSignup}
               className="w-[184px] h-[45px] border border-curpick-brown rounded-[5px] text-curpick-brown hover:bg-curpick-brown hover:text-white transition-colors text-[20px] font-luxgom"
