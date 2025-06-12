@@ -11,7 +11,7 @@ function App() {
   return (
     <UserProvider>
       <Router>
-        <div className="min-h-screen bg-[#F9F9FA]">
+        <div className="relative min-h-screen bg-[#F9F9FA]">
           <Header />
           <Routes>
             <Route path="/" element={<HomePage />} />
