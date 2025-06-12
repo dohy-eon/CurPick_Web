@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaSearch } from 'react-icons/fa';
 import { CiSearch } from 'react-icons/ci';
 import { useUser } from '../contexts/UserContext';
 
