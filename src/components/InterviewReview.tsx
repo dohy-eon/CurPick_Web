@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import CurpickCheck from '../assets/CurpickCheck.svg';
 
 interface InterviewReviewProps {
@@ -14,6 +15,7 @@ interface InterviewReviewProps {
 }
 
 const InterviewReview: React.FC<InterviewReviewProps> = ({
+  id,
   company,
   interviewerCount,
   review,
@@ -21,6 +23,8 @@ const InterviewReview: React.FC<InterviewReviewProps> = ({
   mood,
   companyLogo
 }) => {
+  const navigate = useNavigate();
+
   const renderChecks = (count: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <img
@@ -32,8 +36,15 @@ const InterviewReview: React.FC<InterviewReviewProps> = ({
     ));
   };
 
+  const handleClick = () => {
+    navigate(`/reviews/${id}`);
+  };
+
   return (
-    <div className="w-[1200px] h-[400px] border border-curpick-brown rounded-lg p-4 relative">
+    <div 
+      className="w-[1200px] h-[400px] border border-curpick-brown rounded-lg p-4 relative cursor-pointer hover:shadow-lg transition-shadow"
+      onClick={handleClick}
+    >
       <div className="flex items-start gap-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
@@ -67,7 +78,13 @@ const InterviewReview: React.FC<InterviewReviewProps> = ({
             </div>
           </div>
 
-          <button className="mt-4 bg-curpick-brown text-white px-4 py-2 rounded-lg">
+          <button 
+            className="mt-4 bg-curpick-brown text-white px-4 py-2 rounded-lg"
+            onClick={(e) => {
+              e.stopPropagation();
+              // 회사 위치 기능 구현
+            }}
+          >
             회사 위치
           </button>
         </div>

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { IoIosArrowBack } from 'react-icons/io';
 import CurpickCheck from '../assets/CurpickCheck.svg';
+import { useUser } from '../contexts/UserContext';
 
 interface Review {
   id: number;
@@ -13,6 +14,7 @@ interface Review {
   mood: number;
   createdAt: string;
   updatedAt: string;
+  userId: number;
 }
 
 const ReviewDetailPage: React.FC = () => {
@@ -21,11 +23,12 @@ const ReviewDetailPage: React.FC = () => {
   const [review, setReview] = useState<Review | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isLoggedIn, userId } = useUser();
 
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        const response = await axios.get<Review>(`https://localhost:8080/api/reviews/${id}`);
+        const response = await axios.get<Review>(`http://localhost:8080/api/reviews/${id}`);
         setReview(response.data);
         setLoading(false);
       } catch (err) {
@@ -36,6 +39,23 @@ const ReviewDetailPage: React.FC = () => {
 
     fetchReview();
   }, [id]);
+
+  const handleDelete = async () => {
+    if (!window.confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:8080/api/reviews/${id}`);
+      navigate('/reviews');
+    } catch (err) {
+      setError('게시글 삭제에 실패했습니다.');
+    }
+  };
+
+  const handleEdit = () => {
+    navigate(`/reviews/edit/${id}`);
+  };
 
   const renderChecks = (count: number, maxCount: number = 5) => {
     return Array.from({ length: maxCount }).map((_, index) => (
@@ -68,10 +88,11 @@ const ReviewDetailPage: React.FC = () => {
     );
   }
 
+  const isAuthor = isLoggedIn && review.userId === userId;
+
   return (
     <div className="min-h-screen bg-[#F9F9FA] pt-24 px-4">
       <div className="max-w-4xl mx-auto">
-        {/* 뒤로가기 버튼 */}
         <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-black hover:text-gray-700 mb-8"
@@ -80,28 +101,22 @@ const ReviewDetailPage: React.FC = () => {
           <span>목록으로</span>
         </button>
 
-        {/* 회사명 */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-black">{review.company}</h1>
         </div>
 
-        {/* 면접 정보 */}
         <div className="bg-white rounded-[20px] p-8 shadow-md mb-8">
-          {/* 면접인원 */}
           <div className="mb-6">
             <h2 className="text-lg font-semibold text-black mb-2">면접인원</h2>
             <p className="text-black">{review.interviewerCount}명</p>
           </div>
 
-          {/* 면접평가 */}
           <div className="mb-6">
             <h2 className="text-lg font-semibold text-black mb-2">면접평가</h2>
             <p className="text-black whitespace-pre-wrap">{review.review}</p>
           </div>
 
-          {/* 평점 */}
           <div className="flex gap-16">
-            {/* 면접 난이도 */}
             <div>
               <h2 className="text-lg font-semibold text-black mb-2">면접 난이도</h2>
               <div className="flex gap-2">
@@ -109,7 +124,6 @@ const ReviewDetailPage: React.FC = () => {
               </div>
             </div>
 
-            {/* 면접분위기 */}
             <div>
               <h2 className="text-lg font-semibold text-black mb-2">면접분위기</h2>
               <div className="flex gap-2">
@@ -119,9 +133,27 @@ const ReviewDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* 작성일 */}
-        <div className="text-right text-gray-500">
-          작성일: {new Date(review.createdAt).toLocaleDateString()}
+        <div className="flex justify-between items-center">
+          <div className="text-gray-500">
+            작성일: {new Date(review.createdAt).toLocaleDateString()}
+          </div>
+          
+          {isAuthor && (
+            <div className="flex gap-4">
+              <button
+                onClick={handleEdit}
+                className="px-4 py-2 bg-curpick-brown text-white rounded-lg hover:bg-[#6B4320] transition-colors"
+              >
+                수정
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+              >
+                삭제
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
