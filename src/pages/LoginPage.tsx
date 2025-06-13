@@ -12,18 +12,24 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async () => {
     try {
+      console.log('로그인 시도:', { username });
       const response = await axios.post('http://localhost:8080/api/auth/login', {
         username,
         password
       });
       
-      console.log('로그인 성공 :', response.data);
+      console.log('로그인 응답 데이터:', response.data);
       setNickname(response.data.nickname);
       setUserId(response.data.userId);
       setIsLoggedIn(true);
+      console.log('UserContext 상태 업데이트 완료:', {
+        nickname: response.data.nickname,
+        userId: response.data.userId,
+        isLoggedIn: true
+      });
       navigate('/');
     } catch (error) {
-      console.error('로그인 실패 :', error);
+      console.error('로그인 실패:', error);
     }
   };
 

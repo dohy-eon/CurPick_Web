@@ -1,17 +1,28 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CiSearch } from 'react-icons/ci';
 import { useUser } from '../contexts/UserContext';
 
 const Header: React.FC = () => {
-  const { nickname, isLoggedIn } = useUser();
+  const { nickname, isLoggedIn, setNickname, setIsLoggedIn, setUserId } = useUser();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setNickname(null);
+    setIsLoggedIn(false);
+    setUserId(null);
+    navigate('/');
+  };
+
   return (
     <header className="w-full h-[80px] bg-white">
       <div className="max-w-[1920px] h-full mx-auto px-10 flex items-center justify-between">
         {/* Logo */}
         <Link
-        to="/"
-        className="text-[36px] font-logo text-transparent bg-clip-text bg-gradient-to-r from-white to-curpick-brown drop-shadow-[0_0_0.1px_theme('colors.curpick-brown')]">CurPick
+          to="/"
+          className="text-[36px] font-logo text-transparent bg-clip-text bg-gradient-to-r from-white to-curpick-brown drop-shadow-[0_0_0.1px_theme('colors.curpick-brown')]"
+        >
+          CurPick
         </Link>
 
         {/* 네비게이션  */}
@@ -30,7 +41,15 @@ const Header: React.FC = () => {
         {/* 인증  */}
         <div className="flex items-center gap-4">
           {isLoggedIn ? (
-            <span className="text-curpick-brown font-luxgom">{nickname}님</span>
+            <div className="flex items-center gap-4">
+              <span className="text-curpick-brown font-luxgom">{nickname}님</span>
+              <button
+                onClick={handleLogout}
+                className="text-text-gray text-[20px] font-luxgom hover:text-curpick-brown transition-colors"
+              >
+                로그아웃
+              </button>
+            </div>
           ) : (
             <>
               <Link
