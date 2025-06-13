@@ -5,6 +5,8 @@ interface UserContextType {
   setNickname: (nickname: string | null) => void;
   isLoggedIn: boolean;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
+  userId: number | null;
+  setUserId: (userId: number | null) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -12,9 +14,10 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [nickname, setNickname] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState<number | null>(null);
 
   return (
-    <UserContext.Provider value={{ nickname, setNickname, isLoggedIn, setIsLoggedIn }}>
+    <UserContext.Provider value={{ nickname, setNickname, isLoggedIn, setIsLoggedIn, userId, setUserId }}>
       {children}
     </UserContext.Provider>
   );

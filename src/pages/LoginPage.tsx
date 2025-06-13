@@ -8,7 +8,7 @@ const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setNickname, setIsLoggedIn } = useUser();
+  const { setNickname, setIsLoggedIn, setUserId } = useUser();
 
   const handleLogin = async () => {
     try {
@@ -19,6 +19,7 @@ const LoginPage: React.FC = () => {
       
       console.log('로그인 성공 :', response.data);
       setNickname(response.data.nickname);
+      setUserId(response.data.userId);
       setIsLoggedIn(true);
       navigate('/');
     } catch (error) {
@@ -52,7 +53,7 @@ const LoginPage: React.FC = () => {
         </div>
 
         {/* 폼  */}
-        <div className="mt-12 px-24">
+        <div className="px-12 mt-8">
           <div className="mb-6 flex items-center">
             <label className="w-[84px] text-black text-[20px] font-luxgom">아이디</label>
             <input
