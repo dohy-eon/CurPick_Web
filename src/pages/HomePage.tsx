@@ -16,7 +16,7 @@ const HomePage: React.FC = () => {
 
         {/* 설명 문구 */}
         <p className="text-center text-black text-[20px] font-luxgom">
-          지원하고 싶은 기업의 최신 소식부터 면접후기까지, 한 큐에 모아보는 커리어 피드
+          미래 진로가 고민이 된다면, 한 큐에 모아보는 커리어 피드
         </p>
       </div>
     </div>
