@@ -28,7 +28,7 @@ const Header: React.FC = () => {
         {/* 네비게이션  */}
         <nav className="flex items-center gap-8">
           <Link to="/jobs" className="text-black text-[28px] font-main">
-            채용공고
+            직업정보
           </Link>
           <Link to="/reviews" className="text-black text-[28px] font-main">
             면접후기

@@ -7,6 +7,7 @@ import SignupPage from './pages/SignupPage';
 import InterviewReviewPage from './pages/InterviewReviewPage';
 import ReviewDetailPage from './pages/ReviewDetailPage';
 import ReviewEditPage from './pages/ReviewEditPage';
+import JobPostings from './pages/JobPostings';
 import { UserProvider } from './contexts/UserContext';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
             <Route path="/reviews" element={<InterviewReviewPage />} />
             <Route path="/reviews/:id" element={<ReviewDetailPage />} />
             <Route path="/reviews/edit/:id" element={<ReviewEditPage />} />
+            <Route path="/jobs" element={<JobPostings />} />
           </Routes>
         </div>
       </Router>
