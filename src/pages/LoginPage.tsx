@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
-import axios from 'axios';
+import api from '../api/axios';
 import { useUser } from '../contexts/UserContext';
 
 const LoginPage: React.FC = () => {
@@ -9,27 +9,65 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const { setNickname, setIsLoggedIn, setUserId } = useUser();
+  const [error, setError] = useState('');
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
     try {
-      console.log('로그인 시도:', { username });
-      const response = await axios.post('http://localhost:8080/api/auth/login', {
-        username,
-        password
-      });
+      console.log('로그인 시도:', { username, password });
       
-      console.log('로그인 응답 데이터:', response.data);
-      setNickname(response.data.nickname);
-      setUserId(response.data.userId);
-      setIsLoggedIn(true);
-      console.log('UserContext 상태 업데이트 완료:', {
-        nickname: response.data.nickname,
-        userId: response.data.userId,
-        isLoggedIn: true
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+        credentials: 'include',
       });
+
+      console.log('로그인 응답 상태:', response.status);
+      console.log('로그인 응답 헤더:', Object.fromEntries(response.headers.entries()));
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('로그인 실패 응답:', errorData);
+        throw new Error(errorData.message || '로그인에 실패했습니다.');
+      }
+
+      const data = await response.json();
+      console.log('로그인 성공 데이터:', data);
+
+      // Get tokens from response headers
+      const accessToken = response.headers.get('access-token');
+      const refreshToken = response.headers.get('refresh-token');
+      const authority = response.headers.get('authority');
+      
+      console.log('받은 토큰들:', { accessToken, refreshToken, authority });
+      
+      if (!accessToken) {
+        throw new Error('액세스 토큰을 받지 못했습니다.');
+      }
+
+      // Store tokens in localStorage
+      localStorage.setItem('accessToken', accessToken);
+      if (refreshToken) {
+        localStorage.setItem('refreshToken', refreshToken);
+      }
+      if (authority) {
+        localStorage.setItem('authority', authority);
+      }
+      
+      // Update user context with only necessary information
+      setNickname(data.nickname);
+      setIsLoggedIn(true);
+      
+      // Redirect to home page
       navigate('/');
-    } catch (error) {
-      console.error('로그인 실패:', error);
+    } catch (err) {
+      console.error('로그인 에러:', err);
+      setError(err instanceof Error ? err.message : '로그인 중 오류가 발생했습니다.');
     }
   };
 

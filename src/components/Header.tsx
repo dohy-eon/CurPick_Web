@@ -36,6 +36,11 @@ const Header: React.FC = () => {
           <Link to="/coffee-chat" className="text-black text-[28px] font-main hover:text-curpick-brown transition-colors duration-200">
             커피챗
           </Link>
+          {isLoggedIn && (
+            <Link to="/admin/users" className="text-black text-[28px] font-main hover:text-curpick-brown transition-colors duration-200">
+              관리자
+            </Link>
+          )}
         </nav>
 
         {/* 인증  */}

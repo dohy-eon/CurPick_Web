@@ -9,6 +9,7 @@ import ReviewDetailPage from './pages/ReviewDetailPage';
 import ReviewEditPage from './pages/ReviewEditPage';
 import JobPostings from './pages/JobPostings';
 import CoffeeChat from './pages/CoffeeChat';
+import AdminPage from './pages/AdminPage';
 import { UserProvider } from './contexts/UserContext';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             <Route path="/reviews/edit/:id" element={<ReviewEditPage />} />
             <Route path="/jobs" element={<JobPostings />} />
             <Route path="/coffee-chat" element={<CoffeeChat />} />
+            <Route path="/admin/users" element={<AdminPage />} />
           </Routes>
         </div>
       </Router>
