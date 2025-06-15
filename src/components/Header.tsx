@@ -17,7 +17,7 @@ const Header: React.FC = () => {
   return (
     <header className="w-full h-[80px] bg-white">
       <div className="max-w-[1920px] h-full mx-auto px-10 flex items-center justify-between">
-        {/* Logo */}
+        {/* 로고 */}
         <Link
           to="/"
           className="text-[36px] font-logo text-transparent bg-clip-text bg-gradient-to-r from-white to-curpick-brown drop-shadow-[0_0_0.1px_theme('colors.curpick-brown')]"
@@ -25,7 +25,7 @@ const Header: React.FC = () => {
           CurPick
         </Link>
 
-        {/* 네비게이션  */}
+        {/* 네비게이션 메뉴 */}
         <nav className="flex items-center gap-8">
           <Link to="/jobs" className="text-black text-[28px] font-main hover:text-curpick-brown transition-colors duration-200">
             직업정보
@@ -43,7 +43,7 @@ const Header: React.FC = () => {
           )}
         </nav>
 
-        {/* 인증  */}
+        {/* 인증 섹션 */}
         <div className="flex items-center gap-4">
           {isLoggedIn ? (
             <div className="flex items-center gap-4">
@@ -73,6 +73,7 @@ const Header: React.FC = () => {
               </Link>
             </>
           )}
+          {/* 검색 버튼 */}
           <button className="w-7 h-7 flex items-center justify-center">
             <CiSearch size={28} color="#7C4D25" />
           </button>

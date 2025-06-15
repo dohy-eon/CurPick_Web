@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import api from '../api/api';
 
+// 사용자 프로필 인터페이스 정의
 interface UserProfile {
   username: string;
   nickname: string;
@@ -19,11 +20,13 @@ const ProfilePage: React.FC = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
     if (!isLoggedIn) {
       navigate('/login');
       return;
     }
 
+    // 프로필 정보 가져오기
     const fetchProfile = async () => {
       try {
         const response = await api.get('/api/profile');
@@ -38,10 +41,12 @@ const ProfilePage: React.FC = () => {
     fetchProfile();
   }, [isLoggedIn, navigate]);
 
+  // 수정 모드 활성화
   const handleEdit = () => {
     setIsEditing(true);
   };
 
+  // 프로필 수정 저장
   const handleSave = async () => {
     try {
       await api.put('/api/profile', {
@@ -56,12 +61,14 @@ const ProfilePage: React.FC = () => {
     }
   };
 
+  // 수정 취소
   const handleCancel = () => {
     setEditedNickname(profile?.nickname || '');
     setIsEditing(false);
     setError('');
   };
 
+  // 로딩 중 표시
   if (!profile) {
     return <div className="text-center py-8">로딩 중...</div>;
   }
@@ -71,6 +78,7 @@ const ProfilePage: React.FC = () => {
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">프로필</h1>
         
+        {/* 에러 메시지 표시 */}
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
@@ -79,11 +87,13 @@ const ProfilePage: React.FC = () => {
 
         <div className="bg-white shadow-md rounded-lg p-6">
           <div className="space-y-4">
+            {/* 사용자명 표시 */}
             <div>
               <label className="block text-sm font-medium text-gray-700">사용자명</label>
               <div className="mt-1 text-gray-900">{profile.username}</div>
             </div>
 
+            {/* 닉네임 표시/수정 */}
             <div>
               <label className="block text-sm font-medium text-gray-700">닉네임</label>
               {isEditing ? (
@@ -98,16 +108,19 @@ const ProfilePage: React.FC = () => {
               )}
             </div>
 
+            {/* 이메일 표시 */}
             <div>
               <label className="block text-sm font-medium text-gray-700">이메일</label>
               <div className="mt-1 text-gray-900">{profile.email}</div>
             </div>
 
+            {/* 권한 표시 */}
             <div>
               <label className="block text-sm font-medium text-gray-700">권한</label>
               <div className="mt-1 text-gray-900">{profile.authority}</div>
             </div>
 
+            {/* 수정/저장/취소 버튼 */}
             <div className="pt-4">
               {isEditing ? (
                 <div className="flex space-x-4">

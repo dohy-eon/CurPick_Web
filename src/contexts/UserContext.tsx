@@ -1,33 +1,40 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
+// 사용자 컨텍스트 인터페이스 정의
 interface UserContextType {
   nickname: string | null;
-  setNickname: (nickname: string | null) => void;
   isLoggedIn: boolean;
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
   userId: number | null;
+  setNickname: (nickname: string | null) => void;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
   setUserId: (userId: number | null) => void;
-  handleLogout: () => void;
 }
 
+// 사용자 컨텍스트 생성
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [nickname, setNickname] = useState<string | null>(() => {
-    return localStorage.getItem('nickname');
-  });
-  
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    const savedNickname = localStorage.getItem('nickname');
-    return Boolean(accessToken && savedNickname);
-  });
-  
-  const [userId, setUserId] = useState<number | null>(() => {
-    const savedUserId = localStorage.getItem('userId');
-    return savedUserId ? parseInt(savedUserId) : null;
-  });
+// 사용자 컨텍스트 프로바이더 컴포넌트
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [nickname, setNickname] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [userId, setUserId] = useState<number | null>(null);
 
+  // 컴포넌트 마운트 시 로컬 스토리지에서 사용자 정보 복원
+  useEffect(() => {
+    const storedNickname = localStorage.getItem('nickname');
+    const storedUserId = localStorage.getItem('userId');
+    
+    if (storedNickname) {
+      setNickname(storedNickname);
+      setIsLoggedIn(true);
+    }
+    
+    if (storedUserId) {
+      setUserId(parseInt(storedUserId, 10));
+    }
+  }, []);
+
+  // 사용자 정보가 변경될 때마다 로컬 스토리지 업데이트
   useEffect(() => {
     if (nickname) {
       localStorage.setItem('nickname', nickname);
@@ -37,17 +44,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [nickname]);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      localStorage.setItem('isLoggedIn', 'true');
-    } else {
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('authority');
-    }
-  }, [isLoggedIn]);
-
-  useEffect(() => {
     if (userId) {
       localStorage.setItem('userId', userId.toString());
     } else {
@@ -55,34 +51,23 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [userId]);
 
-  // 로그아웃 처리 함수
-  const handleLogout = () => {
-    setNickname(null);
-    setUserId(null);
-    setIsLoggedIn(false);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('authority');
-    localStorage.removeItem('nickname');
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userId');
-  };
-
   return (
-    <UserContext.Provider value={{ 
-      nickname, 
-      setNickname, 
-      isLoggedIn, 
-      setIsLoggedIn, 
-      userId, 
-      setUserId,
-      handleLogout 
-    }}>
+    <UserContext.Provider
+      value={{
+        nickname,
+        isLoggedIn,
+        userId,
+        setNickname,
+        setIsLoggedIn,
+        setUserId,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
 };
 
+// 사용자 컨텍스트 사용을 위한 커스텀 훅
 export const useUser = () => {
   const context = useContext(UserContext);
   if (context === undefined) {

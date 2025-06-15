@@ -5,14 +5,14 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// Request interceptor
+// 요청 인터셉터
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('accessToken');
     console.log('API 요청 인터셉터 - 토큰:', token);
     if (token) {
       try {
-        // Decode JWT token to get authority
+        // JWT 토큰에서 권한 정보 추출
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -22,8 +22,8 @@ api.interceptors.request.use(
         const tokenData = JSON.parse(jsonPayload);
         console.log('JWT 토큰 payload:', tokenData);
 
-        // 토큰이 만료되었는지 확인
-        const expirationTime = tokenData.exp * 1000; // Convert to milliseconds
+        // 토큰 만료 여부 확인
+        const expirationTime = tokenData.exp * 1000; // 밀리초로 변환
         if (Date.now() >= expirationTime) {
           console.log('토큰이 만료되었습니다.');
           localStorage.removeItem('accessToken');
@@ -34,7 +34,7 @@ api.interceptors.request.use(
         }
 
         config.headers.Authorization = `Bearer ${token}`;
-        // Add authority to headers if available
+        // 권한 정보가 있으면 헤더에 추가
         if (tokenData.auth) {
           config.headers['X-User-Authority'] = tokenData.auth;
         }
@@ -56,7 +56,7 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor
+// 응답 인터셉터
 api.interceptors.response.use(
   (response) => {
     console.log('API 응답 성공:', response.status);

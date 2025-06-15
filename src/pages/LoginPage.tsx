@@ -7,9 +7,9 @@ import { useUser } from '../contexts/UserContext';
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-  const { setNickname, setIsLoggedIn, setUserId } = useUser();
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { setNickname, setIsLoggedIn } = useUser();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +39,7 @@ const LoginPage: React.FC = () => {
       const data = await response.json();
       console.log('로그인 성공 데이터:', data);
 
-      // Get tokens from response headers
+      // 응답 헤더에서 토큰 가져오기
       const accessToken = response.headers.get('access-token');
       const refreshToken = response.headers.get('refresh-token');
       const authority = response.headers.get('authority');
@@ -50,7 +50,7 @@ const LoginPage: React.FC = () => {
         throw new Error('액세스 토큰을 받지 못했습니다.');
       }
 
-      // Store tokens in localStorage
+      // 토큰을 로컬 스토리지에 저장
       localStorage.setItem('accessToken', accessToken);
       if (refreshToken) {
         localStorage.setItem('refreshToken', refreshToken);
@@ -59,15 +59,11 @@ const LoginPage: React.FC = () => {
         localStorage.setItem('authority', authority);
       }
       
-      // Store user info in localStorage
-      localStorage.setItem('nickname', data.nickname);
-      localStorage.setItem('isLoggedIn', 'true');
-      
-      // Update user context with only necessary information
+      // 사용자 컨텍스트 업데이트
       setNickname(data.nickname);
       setIsLoggedIn(true);
       
-      // Redirect to home page
+      // 홈페이지로 리다이렉트
       navigate('/');
     } catch (err) {
       console.error('로그인 에러:', err);
@@ -102,6 +98,12 @@ const LoginPage: React.FC = () => {
 
         {/* 폼  */}
         <div className="px-12 mt-8">
+          {error && (
+            <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm mb-6">
+              {error}
+            </div>
+          )}
+
           <div className="mb-6 flex items-center">
             <label className="w-[84px] text-black text-[20px] font-luxgom">아이디</label>
             <input
