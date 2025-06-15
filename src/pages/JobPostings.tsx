@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import CurpickCheck from '../assets/CurpickCheck.svg';
 
 interface Job {
@@ -42,16 +43,20 @@ const JobPostings: React.FC = () => {
     const fetchJobs = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:8080/api/worknet/jobs?page=${currentPage}&size=${itemsPerPage}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch jobs');
-        }
-        const data: Job[] = await response.json();
-        setJobs(data);
-        // 임시로 total을 537로 설정 (실제로는 API에서 total count를 받아와야 함)
+        const response = await axios.get<Job[]>(`http://localhost:8080/api/worknet/jobs`, {
+          params: {
+            page: currentPage,
+            size: itemsPerPage
+          }
+        });
+        setJobs(response.data);
         setTotal(537);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        if (axios.isAxiosError(err)) {
+          setError(err.response?.data?.message || 'Failed to fetch jobs');
+        } else {
+          setError('An unexpected error occurred');
+        }
       } finally {
         setLoading(false);
       }
