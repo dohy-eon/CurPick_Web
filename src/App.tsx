@@ -10,6 +10,7 @@ import ReviewEditPage from './pages/ReviewEditPage';
 import JobPostings from './pages/JobPostings';
 import CoffeeChat from './pages/CoffeeChat';
 import AdminPage from './pages/AdminPage';
+import ProfilePage from './pages/ProfilePage';
 import { UserProvider } from './contexts/UserContext';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             <Route path="/jobs" element={<JobPostings />} />
             <Route path="/coffee-chat" element={<CoffeeChat />} />
             <Route path="/admin/users" element={<AdminPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
           </Routes>
         </div>
       </Router>

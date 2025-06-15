@@ -47,7 +47,9 @@ const Header: React.FC = () => {
         <div className="flex items-center gap-4">
           {isLoggedIn ? (
             <div className="flex items-center gap-4">
-              <span className="text-curpick-brown font-luxgom">{nickname}님</span>
+              <Link to="/profile" className="text-curpick-brown font-luxgom hover:text-curpick-brown/80">
+                {nickname}님
+              </Link>
               <button
                 onClick={handleLogout}
                 className="text-text-gray text-[20px] font-luxgom hover:text-curpick-brown transition-colors"

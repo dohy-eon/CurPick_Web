@@ -11,20 +11,40 @@ api.interceptors.request.use(
     const token = localStorage.getItem('accessToken');
     console.log('API 요청 인터셉터 - 토큰:', token);
     if (token) {
-      // Decode JWT token to get authority
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      
-      const tokenData = JSON.parse(jsonPayload);
-      console.log('JWT 토큰 payload:', tokenData);
+      try {
+        // Decode JWT token to get authority
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        
+        const tokenData = JSON.parse(jsonPayload);
+        console.log('JWT 토큰 payload:', tokenData);
 
-      config.headers.Authorization = `Bearer ${token}`;
-      // Add authority to headers if available
-      if (tokenData.auth) {
-        config.headers['X-User-Authority'] = tokenData.auth;
+        // 토큰이 만료되었는지 확인
+        const expirationTime = tokenData.exp * 1000; // Convert to milliseconds
+        if (Date.now() >= expirationTime) {
+          console.log('토큰이 만료되었습니다.');
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          localStorage.removeItem('authority');
+          window.location.href = '/login';
+          return Promise.reject('Token expired');
+        }
+
+        config.headers.Authorization = `Bearer ${token}`;
+        // Add authority to headers if available
+        if (tokenData.auth) {
+          config.headers['X-User-Authority'] = tokenData.auth;
+        }
+      } catch (error) {
+        console.error('토큰 디코딩 에러:', error);
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('authority');
+        window.location.href = '/login';
+        return Promise.reject(error);
       }
     }
     console.log('API 요청 헤더:', config.headers);
