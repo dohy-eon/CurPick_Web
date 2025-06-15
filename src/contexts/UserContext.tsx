@@ -14,16 +14,15 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [nickname, setNickname] = useState<string | null>(() => {
-    const savedNickname = localStorage.getItem('nickname');
-    return savedNickname ? savedNickname : null;
+    return localStorage.getItem('nickname');
   });
+  
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    const savedLoginState = localStorage.getItem('isLoggedIn');
-    const savedUserId = localStorage.getItem('userId');
+    const accessToken = localStorage.getItem('accessToken');
     const savedNickname = localStorage.getItem('nickname');
-    // userId와 nickname이 모두 있으면 로그인 상태로 간주
-    return Boolean(savedLoginState === 'true' && savedUserId && savedNickname);
+    return Boolean(accessToken && savedNickname);
   });
+  
   const [userId, setUserId] = useState<number | null>(() => {
     const savedUserId = localStorage.getItem('userId');
     return savedUserId ? parseInt(savedUserId) : null;
@@ -38,22 +37,21 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [nickname]);
 
   useEffect(() => {
-    // 로그인 상태가 변경될 때만 localStorage 업데이트
     if (isLoggedIn) {
       localStorage.setItem('isLoggedIn', 'true');
     } else {
       localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('authority');
     }
-    console.log('로그인 상태 저장됨:', isLoggedIn);
   }, [isLoggedIn]);
 
   useEffect(() => {
     if (userId) {
       localStorage.setItem('userId', userId.toString());
-      console.log('userId 저장됨:', userId);
     } else {
       localStorage.removeItem('userId');
-      console.log('userId 삭제됨');
     }
   }, [userId]);
 
@@ -62,7 +60,12 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setNickname(null);
     setUserId(null);
     setIsLoggedIn(false);
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('authority');
+    localStorage.removeItem('nickname');
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userId');
   };
 
   return (

@@ -59,6 +59,10 @@ const LoginPage: React.FC = () => {
         localStorage.setItem('authority', authority);
       }
       
+      // Store user info in localStorage
+      localStorage.setItem('nickname', data.nickname);
+      localStorage.setItem('isLoggedIn', 'true');
+      
       // Update user context with only necessary information
       setNickname(data.nickname);
       setIsLoggedIn(true);
