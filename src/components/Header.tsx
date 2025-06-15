@@ -27,13 +27,13 @@ const Header: React.FC = () => {
 
         {/* 네비게이션  */}
         <nav className="flex items-center gap-8">
-          <Link to="/jobs" className="text-black text-[28px] font-main">
+          <Link to="/jobs" className="text-black text-[28px] font-main hover:text-curpick-brown transition-colors duration-200">
             직업정보
           </Link>
-          <Link to="/reviews" className="text-black text-[28px] font-main">
+          <Link to="/reviews" className="text-black text-[28px] font-main hover:text-curpick-brown transition-colors duration-200">
             면접후기
           </Link>
-          <Link to="/coffee-chat" className="text-black text-[28px] font-main">
+          <Link to="/coffee-chat" className="text-black text-[28px] font-main hover:text-curpick-brown transition-colors duration-200">
             커피챗
           </Link>
         </nav>
